@@ -1,36 +1,27 @@
+import pandas as pd
 import matplotlib.pyplot as plt
 
 plt.rcParams["font.sans-serif"] = ["SimHei"]
 plt.rcParams["axes.unicode_minus"] = False
 
-
-data = [
-    (1, 2, 3),
-    (2, 3, 1),
-    (3, 1, 2),
-    (4, 2, 1),
-    (2, 4, 3),
-    (3, 3, 2),
-    (5, 1, 4),
-    (4, 3, 2)
-]
+df = pd.read_csv("data.csv")
 
 def calculate(a, b, c):
     return a * 2 + b * 3 - c
 
-
 results = []
 labels = []
 
-for i, (a, b, c) in enumerate(data, start=1):
-    value = calculate(a, b, c)
+for i, row in df.iterrows():
+    value = calculate(row["a"], row["b"], row["c"])
     results.append(value)
-    labels.append(f"第{i}组")
+    labels.append(f"第{i+1}组")
 
 plt.bar(labels, results)
 
-plt.title("8 组数据计算结果柱状图")
+plt.title("基于外部数据的计算结果柱状图")
 plt.xlabel("数据组")
 plt.ylabel("计算结果")
 
 plt.show()
+
