@@ -1,6 +1,7 @@
 import requests
 import json
 import re
+import csv
 urls = [
     "https://d1.weather.com.cn/sk_2d/101220101.html?_=1770886030438",  # 合肥
     "https://d1.weather.com.cn/sk_2d/101220201.html?_=1770884680956",  # 蚌埠
@@ -25,6 +26,10 @@ headers = {
     "Referer": "http://www.weather.com.cn/"
 }
 
+weather_data = []
+
+
+
 for url in urls:
 
     response = requests.get(url, headers=headers)
@@ -38,9 +43,24 @@ for url in urls:
         json_str = match.group(1)
         data = json.loads(json_str)
 
+
+        city = data["cityname"]
+        temp = data["temp"]
+        wind = data["wse"]
+        humidity = data["SD"]
+
         print("城市:", data["cityname"])
         print("温度:", data["temp"])
         print("风速:", data["wse"])
         print("湿度:", data["SD"])
+
+        weather_data.append([city, temp, wind, humidity])
     else:
         print("没有匹配到数据")
+
+
+with open("安徽各市天气.csv", "w", newline="", encoding="utf-8-sig") as f:
+    writer = csv.writer(f)
+    writer.writerow(["城市", "温度(℃)", "风速", "湿度"])
+    writer.writerows(weather_data)
+
