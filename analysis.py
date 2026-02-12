@@ -64,6 +64,7 @@ def run_analysis(predict_func, title_name, frame):
 
     canvas = FigureCanvasTkAgg(fig, master=frame)
     canvas.draw()
-    canvas.get_tk_widget().pack(fill="both", expand=True)True)
+    canvas.get_tk_widget().pack(fill="both", expand=True))
+
 
 
