@@ -1,34 +1,46 @@
 import requests
-import re
 import json
+import re
+urls = [
+    "https://d1.weather.com.cn/sk_2d/101220101.html?_=1770886030438",  # 合肥
+    "https://d1.weather.com.cn/sk_2d/101220201.html?_=1770884680956",  # 蚌埠
+    "https://d1.weather.com.cn/sk_2d/101220301.html?_=1770886155252",  # 芜湖
+    "https://d1.weather.com.cn/sk_2d/101220401.html?_=1770886239258",  # 淮南
+    "https://d1.weather.com.cn/sk_2d/101220501.html?_=1770886298756",  # 马鞍山
+    "https://d1.weather.com.cn/sk_2d/101221201.html?_=1770886443435",  # 淮北
+    "https://d1.weather.com.cn/sk_2d/101221301.html?_=1770886498858",  # 铜陵
+    "https://d1.weather.com.cn/sk_2d/101220601.html?_=1770886539638",  # 安庆
+    "https://d1.weather.com.cn/sk_2d/101221001.html?_=1770886577376",  # 黄山
+    "https://d1.weather.com.cn/sk_2d/101221101.html?_=1770886656299",  # 滁州
+    "https://d1.weather.com.cn/sk_2d/101220801.html?_=1770886695127",  # 阜阳
+    "https://d1.weather.com.cn/sk_2d/101220701.html?_=1770886748695",  # 宿州
+    "https://d1.weather.com.cn/sk_2d/101221501.html?_=1770886776481",  # 六安
+    "https://d1.weather.com.cn/sk_2d/101220901.html?_=1770886817036",  # 亳州
+    "https://d1.weather.com.cn/sk_2d/101221701.html?_=1770886886566",  # 池州
+    "https://d1.weather.com.cn/sk_2d/101221401.html?_=1770886928494"   # 宣城
+]
 
-url = 'https://www.weather.com.cn/weather/101220101.shtml'
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    "User-Agent": "Mozilla/5.0",
+    "Referer": "http://www.weather.com.cn/"
 }
 
-res = requests.get(url, headers=headers)
-res.encoding = 'utf-8'
-html = res.text
+for url in urls:
 
-pattern = r'var observe24h_data = (\{.*?\});'
-match = re.search(pattern, html, re.S)
+    response = requests.get(url, headers=headers)
+    response.encoding = "utf-8"
 
-if match:
-    json_text = match.group(1)
-    data = json.loads(json_text)
+    text = response.text
 
-    latest = data['od']['od2'][0]
-    hour = latest['od21']  # 小时
-    temp = latest['od22']  # 温度
-    wind = latest['od25']  # 风力
-    humidity = latest['od27']  # 湿度
+    match = re.search(r'var dataSK\s*=\s*(\{.*?\})', text)
 
-    print("最新一条天气信息：")
-    print(f"小时: {hour}")
-    print(f"温度: {temp}℃")
-    print(f"风力: {wind}")
-    print(f"湿度: {humidity}%")
+    if match:
+        json_str = match.group(1)
+        data = json.loads(json_str)
 
-else:
-    print("没有找到 observe24h_data")
+        print("城市:", data["cityname"])
+        print("温度:", data["temp"])
+        print("风速:", data["wse"])
+        print("湿度:", data["SD"])
+    else:
+        print("没有匹配到数据")
