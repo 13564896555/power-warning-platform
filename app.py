@@ -158,8 +158,7 @@ risk_assessment = prediction.assess_system_risk(
 # 计算历史风险数据
 historical_risk_df = prediction.generate_historical_risk_data(
     st.session_state.supply_df,
-    st.session_state.demand_df,
-    st.session_state.weather_df
+    st.session_state.demand_df
 )
 
 # 计算供需平衡
